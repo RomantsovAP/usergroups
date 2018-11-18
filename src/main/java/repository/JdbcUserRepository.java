@@ -66,6 +66,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public boolean setGroup(User user, Group group) {
         user.setGroup(group);
+        save(user);
         return false;
     }
 

@@ -10,4 +10,6 @@ public interface GroupRepository {
     boolean delete (int id);
 
     List<Group> getGroupsWithMoreThenTwoUsers();
+
+    List<Group> getAllGroups();
 }

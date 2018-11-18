@@ -69,4 +69,8 @@ public class JdbcGroupRepositoryTest {
         assertThat(groups.size(), is(3));
     }
 
+    @Test
+    public void whenGetAllGroupsThenItGetThemAll() {
+        assertThat(groupRepository.getAllGroups().size(), is(4));
+    }
 }

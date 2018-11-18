@@ -61,4 +61,20 @@ public class JdbcGroupRepository implements GroupRepository {
         }
         return result;
     }
+
+    @Override
+    public List<Group> getAllGroups() {
+        List<Group> result = new ArrayList<Group>();
+        try {
+            Statement statement = connection.createStatement();
+            String query = "SELECT ID, NAME FROM GROUPS ORDER BY ID";
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                result.add(new Group(resultSet.getInt("id"), resultSet.getString("name")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

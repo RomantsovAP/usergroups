@@ -6,37 +6,70 @@ import repository.JdbcGroupRepository;
 import repository.JdbcUserRepository;
 import repository.UserRepository;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 
 public class UserGroups {
-    public static void main(String[] args) {
 
+    private static Connection connection;
+
+    private static void initDBConnection() {
         try {
             Properties dbproperties = new Properties();
             dbproperties.load(UserGroups.class.getResourceAsStream("/db/db.properties"));
-            Connection connection = DriverManager.getConnection(
+            connection = DriverManager.getConnection(
                     (String)dbproperties.get("url"),
                     (String)dbproperties.get("username"),
                     (String)dbproperties.get("password"));
-            GroupRepository groupRepository = new JdbcGroupRepository(connection);
-            List<Group> groups = groupRepository.getGroupsWithMoreThenTwoUsers();
-            UserRepository userRepository = new JdbcUserRepository(connection);
-            User user = new User("UserX", "UserX", Status.Active, LocalDate.of(1980, 8, 6),new Group(1,"TestGroup"));
-            userRepository.save(user);
-            user.setName("UserXXX");
-            userRepository.save(user);
-            userRepository.delete(71);
-            userRepository.setStatus(user, Status.Inactive);
-            userRepository.getUsersByGroupAndStatus(groups.get(0),Status.Active).stream().forEach(System.out::println);
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(UserGroups.class.getResourceAsStream("/db/populateDb.sql")));
+            String script = reader.lines().collect(Collectors.joining("\n"));
+            Statement populatedb = connection.createStatement();
+            populatedb.execute(script);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+    }
+
+    private static void printList(List list) {
+        for (Object obj: list) {
+            System.out.println(obj);
+        }
+        System.out.println("");
+    }
+
+    public static void main(String[] args) {
+
+        initDBConnection();
+
+        GroupRepository groupRepository = new JdbcGroupRepository(connection);
+        UserRepository userRepository = new JdbcUserRepository(connection);
+
+        System.out.println("***users by group 1");
+        printList(userRepository.getUsersByGroup(new Group(1, "Test")));
+        System.out.println("***users by status Inactive");
+        printList(userRepository.getUsersByStatus(Status.Inactive));
+        System.out.println("***groups with more then two users");
+        printList(groupRepository.getGroupsWithMoreThenTwoUsers());
+        System.out.println("***users with birthday last month or month before last month");
+        printList(userRepository.getUsersWithBirthDayLastMonthOrMonthBeforeLastMonth());
+        System.out.println("***change status for user1 ->> Inactive");
+        userRepository.setStatus(userRepository.getAllUsers().get(0), Status.Inactive);
+        printList(userRepository.getAllUsers());
+        System.out.println("***change group for user2 ->> group2");
+        userRepository.setGroup(userRepository.getAllUsers().get(1), new Group(2,"tt"));
+        printList(userRepository.getAllUsers());
+        System.out.println("***delete first user");
+        userRepository.delete(userRepository.getAllUsers().get(0).getId());
+        printList(userRepository.getAllUsers());
     }
 }
