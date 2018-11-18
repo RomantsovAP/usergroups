@@ -13,7 +13,4 @@ public class DateTimeUtil {
         return date == null ? "" : date.format(DATE_FORMATTER);
     }
 
-    public static LocalDate parseLocalDate(String str) {
-        return str.isEmpty() ? null : LocalDate.parse(str);
-    }
 }

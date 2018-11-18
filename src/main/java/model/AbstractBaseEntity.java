@@ -8,6 +8,10 @@ public abstract class AbstractBaseEntity {
     protected AbstractBaseEntity() {
     }
 
+    public boolean isNew() {
+        return this.id == null;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -10,6 +10,19 @@ public class User extends AbstractBaseEntity {
     private LocalDate birthday;
     private Group group;
 
+    public User(String name, String login, Status status, LocalDate birthday, Group group) {
+        this.name = name;
+        this.login = login;
+        this.status = status;
+        this.birthday = birthday;
+        this.group = group;
+    }
+
+    public User(int id, String name, String login, Status status, LocalDate birthday, Group group) {
+        this(name, login, status, birthday, group);
+        this.id = id;
+    }
+
     public String getLogin() {
         return login;
     }

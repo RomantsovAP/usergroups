@@ -6,15 +6,15 @@ import model.User;
 
 import java.util.List;
 
-interface UserRepository {
+public interface UserRepository {
 
     User save(User user);
 
     boolean delete (int id);
 
-    boolean setStatus(Status status);
+    boolean setStatus(User user, Status status);
 
-    boolean setGroup(Group group);
+    boolean setGroup(User user, Group group);
 
     List<User> getAllUsers();
 
