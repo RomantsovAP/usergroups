@@ -51,20 +51,20 @@ public class JdbcGroupRepositoryTest {
     }
 
     @Test
-    public void whenAddSomeGroupItWorks() {
+    public void whenAddSomeGroupThenItWorks() {
         Group newGroup = groupRepository.save(new Group("TestGroup1"));
         assertThat(newGroup.isNew(), is(false));
     }
 
     @Test
-    public void whenAddSomeAndDeleteItItWorks() {
+    public void whenAddSomeAndDeleteItThenItWorks() {
         Group newGroup = groupRepository.save(new Group("TestGroup1"));
         assertThat(groupRepository.delete(newGroup.getId()), is(true));
         assertThat(groupRepository.delete(newGroup.getId()), is(false));
     }
 
     @Test
-    public void whenSeekForGroupsWithMoreThenTwoUsersItWorks() {
+    public void whenSeekForGroupsWithMoreThenTwoUsersThenItWorks() {
         List<Group> groups = groupRepository.getGroupsWithMoreThenTwoUsers();
         assertThat(groups.size(), is(3));
     }

@@ -26,7 +26,7 @@ public class UserGroups {
             GroupRepository groupRepository = new JdbcGroupRepository(connection);
             List<Group> groups = groupRepository.getGroupsWithMoreThenTwoUsers();
             UserRepository userRepository = new JdbcUserRepository(connection);
-            User user = new User("UserX", "UserX", Status.Active, LocalDate.of(1980, 8, 6),groups.get(0));
+            User user = new User("UserX", "UserX", Status.Active, LocalDate.of(1980, 8, 6),new Group(1,"TestGroup"));
             userRepository.save(user);
             user.setName("UserXXX");
             userRepository.save(user);
