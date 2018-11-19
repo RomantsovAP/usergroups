@@ -31,6 +31,7 @@ public class JdbcGroupRepositoryTest {
             groupRepository = new JdbcGroupRepository(connection);
             BufferedReader reader = new BufferedReader(new InputStreamReader(JdbcGroupRepositoryTest.class.getResourceAsStream("/db/populateDb.sql")));
             String script = reader.lines().collect(Collectors.joining("\n"));
+            reader.close();
             Statement populatedb = connection.createStatement();
             populatedb.execute(script);
 

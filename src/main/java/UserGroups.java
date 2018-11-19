@@ -31,8 +31,10 @@ public class UserGroups {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(UserGroups.class.getResourceAsStream("/db/populateDb.sql")));
             String script = reader.lines().collect(Collectors.joining("\n"));
+            reader.close();
             Statement populatedb = connection.createStatement();
             populatedb.execute(script);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -48,7 +50,6 @@ public class UserGroups {
     }
 
     public static void main(String[] args) {
-
         initDBConnection();
 
         GroupRepository groupRepository = new JdbcGroupRepository(connection);
@@ -71,5 +72,11 @@ public class UserGroups {
         System.out.println("***delete first user");
         userRepository.delete(userRepository.getAllUsers().get(0).getId());
         printList(userRepository.getAllUsers());
+
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
